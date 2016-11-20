@@ -1,0 +1,27 @@
+SHOOTING PlayerShooting/1.png 
+STANDING PlayerStanding/0.png
+UP Player/PlayerUp.png
+CROUCH Player/PlayerCrouch.png
+JUMP Player/PlayerJump.png
+LAND Player/PlayerLand.png
+LANDATTACK Player/PlayerLandAttack.png
+GRENADE Player/PlayerGrenade.png
+KNIFE Player/PlayerKnife.png
+VICTORY Player/PlayerVictory.png
+DEATH Player/PlayerDeath1.png
+DEATH Player/PlayerDeath2.png
+
+
+
+Stand
+Shoot
+Crouch
+Jump
+Land
+Up
+Knife
+Grenade
+LandAttack
+Death1
+Death2
+Victory

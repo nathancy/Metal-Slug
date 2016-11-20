@@ -1,0 +1,11 @@
+PlayerShooting/0.png
+PlayerShooting/1.png
+PlayerShooting/2.png
+PlayerShooting/3.png
+PlayerShooting/4.png
+PlayerShooting/5.png
+PlayerShooting/6.png
+PlayerShooting/7.png
+PlayerShooting/8.png
+PlayerShooting/9.png
+PlayerShooting/10.png
