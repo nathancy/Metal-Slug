@@ -1,55 +1,62 @@
+/* ******************************
+ *
+ * File: MetalSlug.java
+ *
+ * Main driver for game
+ *
+ * *************************** */
+
 import java.awt.Color;
 
-//Main driver for game
-public class MetalSlug{	
+public class MetalSlug{
 	public static void main(String[] args){
 		
-		//Initialize EZ and framerate
+		// Initialize EZ and framerate
 		EZ.initialize(1500,600);
 		EZ.setFrameRate(180);
 		
-		//Initialize map, control screen, and BGM
+		// Initialize map, control screen, and BGM
 		Initializer map = new Initializer("map", 5250, 300);
 		Initializer control = new Initializer("control", 750, 300);
 		control.playSound();
 		boolean pauseflag = true;
 		
-		//Scoreboard and victory sound
+		// Scoreboard and victory sound
 		EZText scoreboard = EZ.addText(105, 35, "SCORE: 0", Color.white, 30);
 		EZSound victory1 = EZ.addSound("Sounds/Victory.wav");
 		EZSound victory2 = EZ.addSound("Sounds/Victory1.wav");
 		
-		//Maximum amount of bullets and grenades player can have on map at one time
+		// Maximum amount of bullets and grenades player can have on map at one time
 		final int BULLETS = 15;
 		final int GRENADES = 15;
 		
-		////Number of units and number of projectiles (1 projectile per enemy)
+		// Number of units and number of projectiles (1 projectile per enemy)
 		final int DEATHCOUNTER = 42;
 		final int MAXPROJECTILES = 42;
 		final int MAXUNITS = 42;
 		
-		//Counter for player grenades/bullets to cycle through each enemy
+		// Counter for player grenades/bullets to cycle through each enemy
 		int UNITS_AND_PROJECTILES = 42;
 
-		//Indexes for current state of the player's bullet and grenade
+		// Indexes for current state of the player's bullet and grenade
 		boolean foundBullet = false, foundGrenade = false;
 		int vaccantBulletIndex = 0;
 		int vaccantGrenadeIndex = 0;
 
-		//Player action
+		// Player action
 		char action;
 		
-		//New player and animate effects
+		// New player and animate effects
 		Player player = new Player(150, 500);
 		player.animationInit();
 		
-		//Make enemy units, player projectiles and enemy projectiles
+		// Make enemy units, player projectiles and enemy projectiles
 		Enemy units[] = new Enemy[MAXUNITS];
 		Projectile bullets[] = new Projectile[BULLETS];
 		Projectile grenades[] = new Projectile[GRENADES];
 		Projectile enemyProjectiles[] = new Projectile[MAXPROJECTILES];
 
-		//Creating enemies and their projectiles(enters screen at 1500)
+		// Creating enemies and their projectiles(enters screen at 1500)
 		units[0] = new Enemy(1700, 500, "scientist", 1500, 600);
 		units[1] = new Enemy(6800, 150, "helicopter", 1500, 600);
 		units[2] = new Enemy(3500, 200, "UFO", 1500, 600);
@@ -138,7 +145,7 @@ public class MetalSlug{
 		enemyProjectiles[40] = new Projectile(0, -10, "UFOBullet");
 		enemyProjectiles[41] = new Projectile(0, -10, "UFOBullet");
 		
-		//Initialize enemies, player's bullets and grenades
+		// Initialize enemies, player's bullets and grenades
 		for(int i = 0; i < UNITS_AND_PROJECTILES; i++)
 		{
 			units[i].unitsInit();
@@ -157,15 +164,26 @@ public class MetalSlug{
 			grenades[i].animationInit();
 		}
 		
-		//Player controls
-		//w - look up, a - left, s - crouch, d - move right, p - random movement, l - grenade, k - shoot bullet, j - knife, spacebar - jump
+		/* Player controls
+		    w - look up
+		    a - left
+		    s - crouch
+		    d - move right
+		    p - random movement
+		    l - shoot grenade
+		    k - shoot bullet
+		    j - knife
+		    spacebar - jump
+		 */
+
+		// Main game loop
 		while(true)
 		{  
-			//Move background map and update score
+			// Move background map and update score
 			map.translateObject(.5, 300);
 			scoreboard.setMsg("SCORE: "+ units[0].getPlayerScore());
 			
-			//Pause
+			// Pause game with 'p'
 			if(EZInteraction.isKeyDown('p'))
 			{
 				pauseflag = true;
@@ -175,7 +193,7 @@ public class MetalSlug{
 			{
 				control.show();
 				EZ.refreshScreen();
-				//Unpause
+				// Unpause
 				if(EZInteraction.wasKeyPressed('o'))
 				{
 					pauseflag = false;
@@ -184,32 +202,32 @@ public class MetalSlug{
 				}
 			}
 			
-			//Get key pressed by player
+			// Get key pressed by player
 			action = player.processPlayer();
 
-			//Process bullets and find array of bullet not currently in use (these keys are any shooting key)
+			// Process bullets and find array of bullet not currently in use (these keys are any shooting key)
 			if(action == 'k' || action == 'm' || action == 'o' || action == 'u' || action == 'z')
 			{
 				int i = 0;
 				while(foundBullet == false && (i < BULLETS))
 				{
-					//If found vaccant bullet
+					// If found vaccant bullet
 					if(bullets[i].beingUsed() == false)
 					{
 						bullets[i].switchState();
 						foundBullet = true;
 						vaccantBulletIndex = i;
 					}
-					//Check next bullet
+					// Check next bullet
 					else
 						i++;
 				}
-				//All in use
+				// All in use
 				if(i == BULLETS)
 					foundBullet = false;
 			}
 			
-			//k is standing shoot, m is crouch shoot, o is jump shoot, u is land shoot, z is look up shoot
+			// k is standing shoot, m is crouch shoot, o is jump shoot, u is land shoot, z is look up shoot
 			if(foundBullet == true)
 			{				
 				if(action == 'k' || action == 'o' || action == 'u')
@@ -221,29 +239,29 @@ public class MetalSlug{
 				foundBullet = false;
 			}
 			
-			//Process grenades and find array of grenades not currently in use
+			// Process grenades and find array of grenades not currently in use
 			if(action == 'l' || action == 'n' || action == 'i' || action == 't' || action == 'x')
 			{
 				int i = 0;
 				while(foundGrenade == false && (i < GRENADES))
 				{
-					//If found vaccant grenade
+					// If found vaccant grenade
 					if(grenades[i].beingUsed() == false)
 					{
 						grenades[i].switchState();
 						foundGrenade = true;
 						vaccantGrenadeIndex = i;
 					}
-					//Check next grenade
+					// Check next grenade
 					else
 						i++;
 				}
-				//All in use
+				// All in use
 				if(i == GRENADES)
 					foundGrenade = false;
 			}
 			
-			//l is standing grenade, n is crouch grenade, i is jump grenade, t is grenade
+			// l is standing grenade, n is crouch grenade, i is jump grenade, t is grenade
 			if(foundGrenade == true)
 			{
 				if(action == 'l' || action == 'i' || action == 't')
@@ -255,7 +273,7 @@ public class MetalSlug{
 				foundGrenade = false;	
 			}
 			
-			//Process player's projectiles
+			// Process player's projectiles
 			for(int i = 0; i < UNITS_AND_PROJECTILES; i++)
 			{
 				for(int j = 0; j < BULLETS; j++)
@@ -266,11 +284,11 @@ public class MetalSlug{
 						grenades[j].processProjectile(units[i].getXCenter(), units[i].getYCenter());		
 			}
 			
-			//Controls movement for enemy units
+			// Controls movement for enemy units
 			for(int i = 0; i < UNITS_AND_PROJECTILES; i++)
 				units[i].move();
 			
-			//Check if player's projectiles collide with enemy units
+			// Check if player's projectiles collide with enemy units
 			for(int j = 0; j < UNITS_AND_PROJECTILES; j++)
 			{
 				for(int i = 0; i < BULLETS; i++)
@@ -283,23 +301,23 @@ public class MetalSlug{
 							units[j].collision();
 			}
 			
-			//Move enemy projectiles across map, resets if out of map
+			// Move enemy projectiles across map, resets if out of map
 			for(int i = 0; i < UNITS_AND_PROJECTILES; i++)
 				enemyProjectiles[i].processEnemyProjectile(units[i].getXCenter(), units[i].getYCenter(), units[i].getHealth());
 			for(int i = 0; i < UNITS_AND_PROJECTILES; i++)
 				if(enemyProjectiles[i].isPointInElement(player.getXpos(), player.getYpos()))
 						player.collision();
 			
-			//Win
+			// Win
 			if(units[25].returnDeathcounter() == DEATHCOUNTER)
 			{
-				//Hide other objects, show only victory 
+				// Hide other objects, show only victory
 				System.out.println("Win");
 				player.hidePlayer();
 				player.translateVictoryAnimation(player.getXpos(), player.getYpos());
 				victory1.play();
 				victory2.play();
-				//Hide player projectiles
+				// Hide player projectiles
 				for(int i = 0; i < BULLETS; i++)
 					if(bullets[i].beingUsed() == true)
 						bullets[i].hide();
